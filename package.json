@@ -1,0 +1,32 @@
+{
+  "name": "livestanding",
+  "version": "1.0.0",
+  "description": "",
+  "license": "MIT",
+  "author": "Gigone Lee",
+  "main": "dist/main.js",
+  "scripts": {
+    "dev": "npm run build && cross-env NODE_ENV=development electron .",
+    "build": "vite build",
+    "preview": "vite preview",
+    "start": "npm run build && cross-env DEBUG=true electron .",
+    "compile": "vite build",
+    "electron:dev": "cross-env NODE_ENV=development electron .",
+    "clean": "rimraf dist"
+  },
+  "devDependencies": {
+    "@types/electron": "^1.4.38",
+    "cross-env": "^10.0.0",
+    "electron": "^38.1.0",
+    "electron-builder": "^26.0.12",
+    "rimraf": "^6.0.1",
+    "typescript": "^5.9.2",
+    "vite": "^7.1.7",
+    "vite-plugin-electron": "^0.29.0",
+    "vite-plugin-electron-renderer": "^0.14.6"
+  },
+  "dependencies": {
+    "gsap": "^3.12.5",
+    "protobufjs": "^7.5.4"
+  }
+}

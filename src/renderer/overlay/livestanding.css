@@ -1,0 +1,470 @@
+/* Livestanding window styles for Live Standing application */
+
+/* 전체 페이지 투명 설정 - 강력한 설정 */
+* {
+    box-sizing: border-box;
+}
+
+html {
+    background: transparent none !important;
+}
+
+body {
+    background: transparent none !important;
+}
+
+/* 모든 컨테이너 투명 설정 */
+.livestanding-content,
+.main-title,
+.live-team-panel-title,
+.teams-container {
+    background-image: none !important;
+}
+
+/* CSS 변수 기본값 설정 */
+:root {
+    --panel-height: 32px;
+    --panel-title-height: 40px;
+    --column-header-height: 32px;
+    --ranking-width: 30px;
+    --logo-width: 40px;
+    --team-name-width: 60px;
+    --team-name-margin-left: 8px;
+    --squad-health-width: 60px;
+    --squad-health-height: 16px;
+    --squad-indicator-width: 12px;
+    --total-score-width: 50px;
+    --total-kill-width: 40px;
+    --squad-alive-color: #4CAF50;
+    --squad-dead-color: #F44336;
+    --squad-groggy-color: #FF9800;
+    --background-color: transparent;
+    --text-color: #FFFFFF;
+    --border-color: rgba(255, 255, 255, 0.3);
+    --header-background: rgba(67, 255, 26, 0.91);
+    --panel-title-background: rgba(0, 0, 0, 0.85);
+    --panel-background: rgba(0, 0, 0, 0.6);
+    --ranking-text-color: #FFD700;
+    --font-family: Arial, sans-serif;
+    --title-font-size: 16px;
+    --header-font-size: 12px;
+    --content-font-size: 11px;
+    --ranking-font-size: 14px;
+    --title-font-weight: bold;
+    --header-font-weight: bold;
+    --content-font-weight: normal;
+    --ranking-font-weight: bold;
+    --content-padding: 4px;
+    --column-gap: 2px;
+    --total-panel-width: 100%;
+}
+
+body {
+    border: none; /* 외곽선 제거 */
+    background-color: var(--background-color);
+    color: var(--text-color);
+    font-family: var(--font-family), serif;
+    overflow: hidden; /* 스크롤바 완전 제거 */
+    user-select: none;
+    -webkit-app-region: drag; /* 창을 드래그할 수 있게 함 */
+}
+
+/* 메인 타이틀 스타일 */
+.main-title {
+    width: var(--total-panel-width);
+    text-align: center;
+    font-size: var(--title-font-size);
+    font-weight: var(--title-font-weight);
+    color: var(--text-color);
+    background-color: var(--header-background);
+    padding: 4px;
+    border: none;
+    text-transform: uppercase;
+}
+
+.livestanding-content {
+    width: var(--total-panel-width);
+    flex-direction: column;
+    align-items: flex-start;
+    padding: 0;
+    max-height: 640px; /* 팀 16개 기준 최대 높이 (여백 증가) */
+}
+
+.teams-container {
+    width: var(--total-panel-width);
+    position: relative; /* absolute 위치 지정을 위한 기준점 */
+    display: block; /* flex에서 block으로 변경 (absolute 자식 요소를 위해) */
+    margin: 0; /* 마진 제거 */
+    padding: 0; /* 패딩 제거 */
+    height: 512px; /* 16개 팀 * 32px = 512px */
+    min-height: 512px;
+    max-height: 512px;
+    overflow: hidden; /* 16개 초과 시 숨김 */
+}
+
+/* 스크롤바 완전 제거 */
+::-webkit-scrollbar {
+    display: none;
+}
+
+/* Firefox용 스크롤바 제거 */
+html {
+    scrollbar-width: none;
+    background-color: transparent;
+}
+
+/* IE/Edge용 스크롤바 제거 */
+body {
+    -ms-overflow-style: none;
+}
+
+/* ===== 패널 애니메이션 스타일 ===== */
+
+/* 탈락 애니메이션 */
+@keyframes elimination {
+    0% {
+        opacity: 1;
+        transform: scale(1);
+        background: rgba(255, 255, 255, 0.1);
+    }
+    25% {
+        opacity: 0.8;
+        transform: scale(1.1);
+        background: rgba(255, 0, 0, 0.58);
+    }
+    50% {
+        opacity: 0.6;
+        transform: scale(0.9);
+        background: rgba(128, 128, 128, 0.5);
+    }
+    100% {
+        opacity: 0.3;
+        transform: scale(1);
+        background: rgba(128, 128, 128, 0.3);
+    }
+}
+
+/* 탈락 오버레이 애니메이션 */
+@keyframes eliminationOverlay {
+    0% {
+        opacity: 0;
+        transform: scale(0.8);
+    }
+    20% {
+        opacity: 1;
+        transform: scale(1.1);
+    }
+    80% {
+        opacity: 1;
+        transform: scale(1);
+    }
+    100% {
+        opacity: 0.6;
+        transform: scale(1);
+    }
+}
+
+/* 탈락 효과 */
+.elimination-animation {
+    animation: elimination 1.5s ease-in-out forwards;
+}
+
+/* 탈락 오버레이 */
+.elimination-overlay {
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    background: rgba(0, 0, 0, 0.7);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    color: #ff4444;
+    font-weight: bold;
+    font-size: 14px;
+    opacity: 0;
+    pointer-events: none;
+    z-index: 5;
+}
+
+.elimination-overlay.show {
+    opacity: 1;
+    animation: eliminationOverlay 3s ease-in-out;
+}
+
+/* 초기 표시 애니메이션 */
+.panel-fade-in {
+    opacity: 0;
+    transition: opacity 0.3s ease, transform 0.3s ease;
+}
+
+.panel-fade-in.show {
+    opacity: 1;
+    transform: translateX(0);
+}
+
+/* 패널 타이틀 스타일 */
+.live-team-panel-title {
+    width: var(--total-panel-width);
+    height: var(--column-header-height); /* 명시적 높이 설정 */
+    margin: 0; /* 모든 마진 제거 */
+    padding: 0; /* 모든 패딩 제거 */
+    background-color: var(--panel-title-background);
+    border: none; /* 외곽선 제거 */
+    overflow: hidden; /* 내용이 넘치지 않도록 */
+    box-sizing: border-box; /* 패딩 포함 높이 계산 */
+}
+
+/* 팀 패널이 없을 때 타이틀 패널 배경 제거 */
+.live-team-panel-title.no-teams {
+    background-color: transparent;
+}
+
+.live-team-panel-title.no-teams .column-headers {
+    background: transparent;
+}
+
+.column-headers {
+    display: flex;
+    align-items: center;
+    height: 100%; /* 부모 높이에 맞춤 */
+    padding: 0 var(--content-padding);
+    gap: var(--column-gap);
+    margin: 0; /* 마진 제거 */
+    box-sizing: border-box; /* 패딩 포함 높이 계산 */
+}
+
+.column-header {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: var(--header-font-size);
+    font-weight: var(--header-font-weight);
+    color: var(--text-color);
+    text-align: center;
+    text-transform: uppercase;
+    letter-spacing: 1px;
+}
+
+.header-ranking {
+    width: var(--ranking-width);
+}
+
+.header-logo {
+    width: var(--logo-width);
+}
+
+.header-team {
+    width: var(--team-name-width);
+    margin-left: var(--team-name-margin-left);
+}
+
+.header-alive {
+    width: var(--squad-health-width);
+}
+
+.header-pts {
+    width: var(--total-score-width);
+}
+
+.header-kill {
+    width: var(--total-kill-width);
+}
+
+/* 드래그 영역 제외 */
+.live-team-panel,
+.live-team-panel-title,
+.teams-container {
+    -webkit-app-region: no-drag;
+}
+
+/* 반응형 디자인 */
+@media (max-width: 400px) {
+    body {
+        padding: 0;
+    }
+
+    .livestanding-content {
+        padding: 0;
+    }
+
+    :root {
+        --panel-height: 28px;
+        --panel-title-height: 36px;
+        --ranking-width: 25px;
+        --logo-width: 35px;
+        --team-name-width: 50px;
+        --team-name-margin-left: 6px;
+        --squad-health-width: 50px;
+        --squad-indicator-width: 10px;
+        --total-score-width: 45px;
+        --total-kill-width: 35px;
+        --title-font-size: 14px;
+        --header-font-size: 10px;
+        --content-font-size: 9px;
+        --ranking-font-size: 12px;
+    }
+}
+
+/* 애니메이션 효과 */
+.teams-container {
+    animation: fadeIn 0.5s ease-in-out;
+}
+
+@keyframes fadeIn {
+    from {
+        opacity: 0;
+    }
+    to {
+        opacity: 1;
+    }
+}
+
+/* 패널 위치 변경 애니메이션 */
+.live-team-panel {
+    position: absolute; /* absolute 위치 지정 */
+    left: 0; /* 왼쪽 정렬 */
+    width: 100%; /* 전체 너비 */
+    transition: top 0.5s cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+
+/* 탈락된 팀 패널 스타일 개선 */
+.live-team-panel.eliminated {
+    opacity: 0.3;
+    background: rgba(80, 80, 80, 0.1);
+    transition: opacity 0.5s ease, background 0.5s ease;
+}
+
+/* 매치에 참여하지 않는 팀 스타일 */
+.live-team-panel.not-in-match {
+    opacity: 0.3;
+    filter: grayscale(50%);
+}
+
+/* 랭킹 변경 시 강조 효과 */
+.panel-ranking {
+    transition: color 0.3s ease, text-shadow 0.3s ease;
+}
+
+.panel-ranking.rank-improved {
+    color: #00ff00;
+    text-shadow: 0 0 10px rgba(0, 255, 0, 0.5);
+}
+
+.panel-ranking.rank-declined {
+    color: #ff4444;
+    text-shadow: 0 0 10px rgba(255, 68, 68, 0.5);
+}
+
+/* 리니어 채우기 애니메이션을 위한 설정 */
+.live-team-panel {
+    --inkwell-progress: 0%;
+    --inkwell-opacity-value: 0;
+    --inkwell-progress-2: 0%;
+    --inkwell-display-2: none;
+    --inkwell-opacity-value-2: 0;
+    overflow: hidden; /* 채우기가 패널 밖으로 나가지 않도록 */
+    position: relative;
+}
+
+/* 첫 번째 리니어 채우기 (색상 애니메이션) */
+.live-team-panel::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: var(--inkwell-progress, 0%);
+    height: 100%;
+    background: rgba(255, 255, 255, 0.3);
+    pointer-events: none;
+    z-index: 10;
+    opacity: var(--inkwell-opacity-value, 0);
+    transition: none; /* GSAP가 제어하므로 CSS transition 비활성화 */
+}
+
+/* 두 번째 리니어 채우기 (원래 색으로 복귀) */
+.live-team-panel::after {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: var(--inkwell-progress-2, 0%);
+    height: 100%;
+    background: rgba(80, 80, 80, 0.1);
+    pointer-events: none;
+    z-index: 11;
+    display: var(--inkwell-display-2, none); /* 기본적으로 숨김 */
+    transition: none;
+}
+
+/* 랭크업 리니어 색상 - 더 진하게 */
+.live-team-panel.rank-up-inkwell::before {
+    background: rgba(0, 255, 0, 0.5);
+}
+
+/* 랭크다운 리니어 색상 - 더 진하게 */
+.live-team-panel.rank-down-inkwell::before {
+    background: rgba(255, 68, 68, 0.5);
+}
+
+/* 스쿼드 생존 상태 인디케이터 */
+.panel-squad-health {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    width: var(--squad-health-width);
+}
+
+.squad-indicators {
+    display: flex;
+    gap: 2px;
+    align-items: center;
+    justify-content: center;
+}
+
+.squad-indicator {
+    width: var(--squad-indicator-width);
+    height: var(--squad-health-height);
+    border-radius: 50%;
+    border: 1px solid rgba(255, 255, 255, 0.3);
+    transition: all 0.3s ease;
+    background-color: #888 !important; /* 기본 색상 (회색) */
+}
+
+/* 생존 상태별 색상 - 강력한 우선순위 */
+.squad-indicator.alive {
+    background-color: var(--squad-alive-color, #FFEB3B) !important;
+    box-shadow: 0 0 4px rgba(255, 235, 59, 0.5) !important;
+    border: 2px solid #FFEB3B !important;
+}
+
+.squad-indicator.groggy {
+    background-color: var(--squad-groggy-color, #FF9800) !important;
+    box-shadow: 0 0 4px rgba(255, 152, 0, 0.5) !important;
+    animation: pulse 1s infinite;
+    border: 2px solid #FF9800 !important;
+}
+
+.squad-indicator.dead {
+    background-color: var(--squad-dead-color, #F44336) !important;
+    opacity: 0.7 !important;
+    border: 2px solid #F44336 !important;
+}
+
+/* 기절 상태 펄스 애니메이션 */
+@keyframes pulse {
+    0% {
+        opacity: 0.7;
+        transform: scale(1);
+    }
+    50% {
+        opacity: 1;
+        transform: scale(1.1);
+    }
+    100% {
+        opacity: 0.7;
+        transform: scale(1);
+    }
+}

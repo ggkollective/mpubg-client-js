@@ -1,0 +1,100 @@
+syntax = "proto3";
+
+message PostDataStats {
+    // stats
+    string death_type = 1;
+    double assists = 2;
+    double boosts = 3;
+    double damage_dealt = 4;
+    double headshot_kills = 5;
+    double heals = 6;
+    double kill_places = 7;
+    double kill_points = 8;
+    double kill_points_delta = 9;
+    double kill_streaks = 10;
+    double kills = 11;
+    double last_kill_points = 12;
+    double last_win_points = 13;
+    double longest_kill = 14;
+    double most_damage = 15;
+    double revives = 16; // 현재는 rescue로 사용
+    double ride_distance = 17;
+    double road_kills = 18;
+    double swim_distance = 19;
+    double team_kill = 20;
+    double time_survived = 21;
+    double vehicle_destroys = 22;
+    double walk_distance = 23;
+    double weapons_acquired = 24;
+    double win_place = 25;
+    double win_points = 26;
+    double win_points_delta = 27;
+    double total_distance = 28;
+}
+
+message TelemetryStats {
+    // stats
+    bool is_groggy = 1;
+    bool is_alive = 2;
+    string killed_by = 3;
+    double assists = 4;
+    double heals = 5;
+    double kills = 6;
+
+    double total_damage_dealt = 7;
+    double head_damage_dealt = 8;
+    double arm_damage_dealt = 9;
+    double torso_damage_dealt = 10;
+    double pelvis_damage_dealt = 11;
+    double leg_damage_dealt = 12;
+
+    int64 total_kill_rank = 13;
+    int64 total_damage_rank = 14;
+    int64 killed_at = 15;
+
+    int64 nb_of_groggied = 16;
+    int64 nb_of_headshots = 17;
+    int64 nb_of_painkillers_use = 18;
+    int64 nb_of_grenades_use = 19;
+    int64 nb_of_drink_use = 20;
+    int64 nb_of_bandage_use = 21;
+
+    int64 total_deaths = 22;
+    int64 total_match_joined = 23;
+    int64 nb_of_make_groggy = 24;
+    int64 nb_of_shots = 25;
+
+    double last_loc_x = 26;
+    double last_loc_y = 27;
+    double last_loc_z = 28;
+
+    double landing_loc_x = 29;
+    double landing_loc_y = 30;
+    double landing_loc_z = 31;
+
+    int64 eliminated_at = 32;
+
+    repeated string player_killed = 33;
+}
+
+message MobilePlayerTelemetry {
+    // Mobile only data
+    double time_in_bluezone = 1;
+    double damage_taken = 2;
+    double air_drop_acquisitions = 3;
+    double smoke_grenades_uses = 4;
+    double frag_grenades_uses = 5;
+    double kills_with_grenade = 6;
+    double revives = 7;
+}
+
+// Player 객체
+message Player2 {
+    string name = 1;
+    string id = 2;
+    string team_name = 3;
+    int64 team_id = 4;
+    PostDataStats post_data_pb = 5;
+    TelemetryStats telemetry_pb = 6;
+    MobilePlayerTelemetry mob = 7;
+}

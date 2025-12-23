@@ -1,0 +1,16 @@
+syntax = "proto3";
+import "team2.proto";
+import "player2.proto";
+
+
+message ObserverMessage2 {
+    bytes match_id = 1;
+    string tournament_id = 2;
+    
+    repeated Player2 player_stats = 3;
+    repeated Player2 total_player_stats = 4;
+    repeated Team2 team_stats = 5;
+    repeated Team2 total_team_stats = 6;
+
+    bool refresh = 7;
+}

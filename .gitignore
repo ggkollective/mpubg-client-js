@@ -1,0 +1,57 @@
+# Node.js dependencies
+node_modules/
+npm-debug.log*
+yarn-debug.log*
+yarn-error.log*
+
+# Logs
+logs
+*.log
+lerna-debug.log*
+
+# Runtime data
+pids
+*.pid
+*.seed
+*.pid.lock
+
+# OS
+.DS_Store
+Thumbs.db
+
+# Editor settings
+.vscode/
+.idea/
+
+# Build outputs
+dist/
+out/
+release/
+build/
+
+# Electron-builder artifacts
+/build/
+/dist/
+*.exe
+*.dmg
+*.AppImage
+*.snap
+*.msi
+*.deb
+*.rpm
+
+# TypeScript
+*.tsbuildinfo
+# TypeScript compiled files (모든 하위 디렉토리 포함)
+src/**/*.js
+src/**/*.js.map
+src/**/*.d.ts
+src/**/*.d.ts.map
+
+# Environment files
+.env
+.env.*.local
+
+# Coverage / test outputs
+coverage/
+*.lcov

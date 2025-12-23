@@ -1,0 +1,86 @@
+syntax = "proto3";
+
+message TeamLocation {
+    int64 phase = 1;
+    double x = 2;
+    double y = 3;
+    double z = 4;
+    bool eliminated = 5;
+    int64 elapsed_in_sec = 6;
+}
+
+message KillLog {
+    string victim_name = 1;
+    int64 killed_at = 2;
+    double x = 3;
+    double y = 4;
+    double z = 5;
+}
+
+message MobileTeamTelemetry {
+    // Mobile only data
+    double kills_with_grenade = 1;
+    double air_drop_acquisitions = 2;
+    double smoke_grenades_uses = 3;
+    double frag_grenades_uses = 4;
+    double heals = 5;
+    double revives = 6;
+}
+
+// Team 객체
+message Team2 {
+    string name = 1;
+    int64 id = 2;
+    map<string, int64> kills_per_team = 3;  // team_name + kills
+    double total_kills = 4;
+    double deaths = 5;
+    double placement_score = 6;  // placement
+    double extra_score = 7;
+    double wwcd = 8;
+    double rank = 9;  // this match or total
+
+    int64 eliminated_at = 10;
+    double kill_steals = 11;
+
+    double total_score = 12;
+    double time_survived = 13;
+    int64 matches_joined = 14;
+    double avg_kills = 15;
+    double avg_score = 16;
+    double avg_time_survived = 17;
+    double damage_dealt = 18;
+
+    int64 nb_of_groggied = 19;
+    int64 nb_of_make_groggy = 20;
+    double revives = 21;
+
+    double highest_match_total_score = 22;
+    double highest_match_kills = 23;
+    double highest_match_damage_dealt = 24;
+    double highest_match_rank = 25;
+
+    double latest_match_total_score = 26;
+    double latest_match_kill = 27;
+    double latest_match_rank = 28;
+
+    double placement_rank = 29;
+    double penalty = 30;
+
+    double rank_ad = 31;
+
+    repeated TeamLocation phase_locations = 32;
+    TeamLocation landing_location = 33;
+
+    double total_distance = 34;
+    string last_standing_player = 35;
+    bool eliminated = 36;
+    int64 last_eliminated_at = 37;
+
+    double latest_match_time_survived = 38;
+
+    repeated KillLog kill_logs = 39;
+
+    MobileTeamTelemetry mob = 40;
+    string full_name = 41;
+    int64 region_code = 42;
+}

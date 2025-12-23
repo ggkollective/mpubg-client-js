@@ -1,0 +1,47 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Live Standing</title>
+    <link rel="stylesheet" href="main-window.css">
+</head>
+<body>
+    <div class="container">
+        <h1>Live Standing</h1>
+        <p>Electron 애플리케이션이 성공적으로 실행되었습니다!</p>
+
+        <div class="control-section">
+            <h3>오버레이 제어</h3>
+            <button id="toggleLiveStanding" class="control-button">
+                오버레이 창 열기
+            </button>
+        </div>
+
+        <div class="control-section">
+            <h3>테스트 데이터</h3>
+            <div class="test-controls">
+                <button id="startTestData" class="control-button test-start">
+                    테스트 데이터 시작
+                </button>
+                <button id="stopTestData" class="control-button test-stop" disabled>
+                    테스트 데이터 중지
+                </button>
+            </div>
+            <div class="test-status">
+                <div class="status-item">
+                    <span class="status-label">상태:</span>
+                    <span id="testStatus" class="status-value">중지됨</span>
+                </div>
+                <div class="status-item">
+                    <span class="status-label">진행률:</span>
+                    <span id="testProgress" class="status-value">0/0</span>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- 렌더러 스크립트 로드 -->
+    <script type="module" src="./main-window.ts"></script>
+</body>
+</html>
