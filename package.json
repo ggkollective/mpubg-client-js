@@ -13,10 +13,12 @@
     "compile": "vite build",
     "electron:dev": "cross-env NODE_ENV=development electron .",
     "clean": "rimraf dist",
-    "test-modules": "npm run build && node dist/test-modules.js"
+    "test-modules": "npm run build && node dist/test-modules.js",
+    "test-websocket": "npm run build && node dist/test-websocket.js"
   },
   "devDependencies": {
     "@types/electron": "^1.4.38",
+    "@types/ws": "^8.18.1",
     "cross-env": "^10.0.0",
     "electron": "^38.1.0",
     "electron-builder": "^26.0.12",
@@ -29,6 +31,7 @@
   "dependencies": {
     "electron-log": "^5.4.3",
     "gsap": "^3.12.5",
-    "protobufjs": "^7.5.4"
+    "protobufjs": "^7.5.4",
+    "ws": "^8.19.0"
   }
 }

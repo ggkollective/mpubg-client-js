@@ -154,13 +154,170 @@ mpubg-client-js/
 └── package.json
 ```
 
+## 5. WebSocket Client Module (`src/shared/websocket-client.ts`)
+
+### Features
+- WebSocket 연결 및 자동 재연결 (3초 간격)
+- 연결 상태 관리 (Disconnected, Connecting, Connected)
+- 인증 메시지 자동 전송
+- 재연결 플래그 관리
+
+### Usage
+```typescript
+import { WebSocketClient, ConnectionStatus } from './shared/websocket-client';
+
+const wsClient = new WebSocketClient('localhost:8080', false);
+
+wsClient
+    .onConnect((succeed, reconnect, message) => {
+        console.log(`Connected: ${succeed}, Reconnect: ${reconnect}`);
+    })
+    .onMessage((data, reconnecting) => {
+        dispatcher.enqueue({ reconnecting, data });
+    })
+    .onDisconnect((closedByUser) => {
+        if (!closedByUser) console.log('Will auto-reconnect');
+    });
+
+wsClient.connect('access-token');
+```
+
+### Connection Flow
+1. `connect(accessToken)` → WebSocket 연결
+2. 연결 성공 → 자동 `authenticate()` 호출
+3. 서버 code 201 → 인증 성공
+4. 서버 code 200 + data → 메시지 수신
+5. 연결 끊김 → 자동 재연결 (3초 후)
+
+## 6. Match State Manager Module (`src/shared/match-state-manager.ts`)
+
+### Features
+- 현재 매치 ID 추적
+- 매치 ID 변경 감지
+- **재연결 시 refresh 방지** (핵심 기능)
+
+### Usage
+```typescript
+import { MatchStateManager } from './shared/match-state-manager';
+
+const matchStateManager = new MatchStateManager();
+
+// Check if refresh is needed
+const shouldRefresh = matchStateManager.shouldRefresh(newMatchId);
+
+if (shouldRefresh) {
+    console.log('Match changed - refresh UI');
+} else {
+    console.log('Same match - update UI');
+}
+
+// Update state
+matchStateManager.updateState(matchId, tournamentId);
+```
+
+### Refresh Logic
+**Refresh가 필요한 경우:**
+- ✅ 매치 ID가 변경되었을 때
+
+**Refresh가 필요하지 않은 경우:**
+- ❌ 첫 메시지 수신 시
+- ❌ 재연결 후 같은 매치 ID를 받았을 때
+- ❌ 같은 매치 ID의 업데이트 메시지
+
 ## Dependencies
 - `electron-log`: ^5.4.3 - Logging
 - `protobufjs`: ^7.5.4 - Protocol Buffer handling
+- `ws`: ^8.x - WebSocket client library
+- `@types/ws`: ^8.x - TypeScript type definitions
+
+## Testing
+
+### Run All Tests
+```bash
+# Test core modules (logger, data format, dispatcher)
+npm run test-modules
+
+# Test WebSocket and refresh logic
+npm run test-websocket
+```
+
+### WebSocket Test Scenarios
+1. **정상 작동**: 여러 메시지 수신 및 처리
+2. **재연결 (같은 매치)**: 재연결 후 refresh 되지 않음 확인 ✓
+3. **매치 변경**: 다른 매치 ID 수신 시 refresh 트리거 확인 ✓
+
+### Test Results
+```
+--- Scenario 1: Initial connection (3 messages) ---
+📨 Message #1
+   Reconnecting: false
+   ✓ UPDATE: Same match, continue
+
+--- Scenario 2: Disconnect and reconnect (same match) ---
+⚠️  Connection lost...
+🔌 Reconnecting...
+📨 Message #4
+   Reconnecting: true
+   🔌 RECONNECTED: Same match, no refresh ✓
+
+--- Scenario 3: Match ID change ---
+📨 Message #5
+   🔄 REFRESH: Match ID changed ✓
+```
+
+## Integration Example
+
+```typescript
+import { WebSocketClient } from './shared/websocket-client';
+import { MessageDispatcher } from './shared/message-dispatcher';
+import { MatchStateManager } from './shared/match-state-manager';
+import { dataFormat } from './shared/data-format';
+
+// Initialize
+await dataFormat.initialize();
+const matchStateManager = new MatchStateManager();
+
+// Create dispatcher with refresh logic
+const dispatcher = new MessageDispatcher((message, reconnecting) => {
+    if (message.matchId) {
+        const shouldRefresh = matchStateManager.shouldRefresh(message.matchId);
+
+        if (shouldRefresh) {
+            console.log('🔄 REFRESH: Match changed');
+            clearLeaderboard();
+        } else if (reconnecting) {
+            console.log('🔌 RECONNECTED: Same match, no refresh');
+        } else {
+            console.log('✓ UPDATE: Continue');
+        }
+
+        matchStateManager.updateState(message.matchId, message.tournamentId || '');
+        updateLeaderboard(message);
+    }
+});
+
+// Create WebSocket client
+const wsClient = new WebSocketClient('your-host', false);
+
+wsClient
+    .onMessage((data, reconnecting) => {
+        dispatcher.enqueue({ reconnecting, data });
+    })
+    .onDisconnect((closedByUser) => {
+        if (!closedByUser) {
+            console.log('Connection lost - will auto-reconnect');
+        }
+    });
+
+// Start
+dispatcher.start();
+wsClient.connect('your-access-token');
+```
 
 ## Next Steps
-1. Integrate modules with WebSocket connection
-2. Connect dispatcher to UI components
-3. Implement leaderboard updates based on messages
-4. Add animation triggers for rank changes, kills, eliminations
+1. ✅ WebSocket 모듈 구현 완료
+2. ✅ Refresh 로직 구현 및 테스트 완료
+3. Connect dispatcher to UI components
+4. Implement leaderboard updates based on messages
+5. Add animation triggers for rank changes, kills, eliminations
 

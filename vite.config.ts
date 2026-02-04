@@ -110,6 +110,16 @@ export default defineConfig({
             rollupOptions: { external: ['electron'] }
           }
         }
+      },
+      {
+        entry: 'src/test-websocket.ts',
+        vite: {
+          build: {
+            sourcemap: true,
+            outDir: 'dist',
+            rollupOptions: { external: ['electron'] }
+          }
+        }
       }
     ]),
     renderer(),
