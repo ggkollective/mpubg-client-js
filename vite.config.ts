@@ -71,9 +71,7 @@ const copyHtmlPlugin = () => ({
       console.warn('HTML copy failed:', (error as Error).message)
     }
   }
-})
-
-// 렌더러 HTML 파일들을 자동으로 찾아서 입력으로 설정
+})// 렌더러 HTML 파일들을 자동으로 찾아서 입력으로 설정
 const rendererHtmlFiles = findHtmlFiles(resolve(__dirname, 'src/renderer'))
 
 export default defineConfig({
