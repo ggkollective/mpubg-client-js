@@ -99,7 +99,7 @@ export class TestRunner {
         // Enqueue to dispatcher
         const queueData: EventQueueData = {
             reconnecting: false,
-            data: eventData
+            data: eventData as string,
         };
 
         this.dispatcher.enqueue(queueData);
